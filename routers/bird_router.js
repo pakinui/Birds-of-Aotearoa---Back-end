@@ -17,6 +17,8 @@ router.use(bodyParser.urlencoded({ extended: false }));
 
 router.use(express.json());
 
+const multer  = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 
 // TODO: finishe the "Create" route(s)
@@ -27,49 +29,60 @@ router.get('/create', async (req, res) => {
     res.render('createPage');
 });
 
-router.post('/create', async (req, res) => {
+var image = upload.single('myFile');
+router.post('/create', image, async (req, res) => {
     console.log('post create');
+    console.log(req.body);
+    console.log(req.body.pName);
 
-    const response = await fetch('./birds/create', {
-        method: 'POST',
-        body: JSON.stringify(birdData),
-        header: {
-            'Content-Type' : 'application/json'
-        }
-    }) ;
-    console.log(await response.text());
+    // const response = await fetch('./birds/create', {
+    //     method: 'POST',
+    //     body: JSON.stringify(birdData),
+    //     header: {
+    //         'Content-Type' : 'application/json'
+    //     }
+    // }) ;
+    // console.log(await response.text());
     // currently does nothing except redirect to home page
     //create new bird element on page
     
 
-    const name = req.query.pName;
-    console.log(name);
-    console.log(`primary naem = ${req.body.primary_name}`);
+    // const name = req.query.pName;
+    // console.log(name);
+    // console.log(`primary naem = ${req.body.primary_name}`);
     //console.log(req);
-    // const newBird = {
-    //     primary_name: req.body.pName,
-    //     english_name: req.query.eName,
-    //     scientific_name: req.query.sName,
-    //     order: req.query.red,
-    //     family: req.query.fam,
-    //     status: req.query.cStatus,
-    //     photo: {
-    //         credits: req.query.credit,
-    //         source: req.query.source
-    //     },
-    //     size: {
-    //         height: {
-    //             value: req.query.height,
-    //             units : "g"
-    //         },
-    //         weight: {
-    //             value: req.query.weight,
-    //             units: "cm"
-    //         }
-    //     }
+    var tempPath = req.files.myFile.path;
+    var targetPath = 'uploads/' + req.files.myFile.name;
+
+    
+    const newBird = {
+        primary_name: req.body.pName,
+        english_name: req.body.eName,
+        scientific_name: req.body.sName,
+        order: req.body.ord,
+        family: req.body.fam,
+        status: req.body.cStatus,
+        photo: {
+            credit: req.body.credit,
+            source: tempPath
+        },
+        size: {
+            height: {
+                value: req.body.height,
+                units : "g"
+            },
+            weight: {
+                value: req.body.weight,
+                units: "cm"
+            }
+        }
         
-    // };
+    };
    
+    console.log(newBird);
+    const bird_info = await BirdModel.create(newBird);
+    console.log(bird_info, '/birds/create response');
+    //res.send('success!');
     
  //   const birdInfo = JSON.stringify(newBird);
     //const new_b = await BirdModel.create(newBird);
@@ -80,7 +93,7 @@ router.post('/create', async (req, res) => {
 
 
     
-    res.redirect('/birds/create');
+    res.redirect('/');
 });
 
 // TODO: get individual bird route(s)
@@ -92,9 +105,7 @@ router.get('/bird',  async (req, res) => {
     //const search = req.query.search;
     const status = req.query.status;
     const sort = req.query.sort;
-    
-   //var birds =await  bird_controller.filter_bird_data(id, status, sort);
-   //console.log(birds);
+  
    
     // render the Pug template 'home.pug' with the filtered data
     //this means the data from bird_con.. = birds?
