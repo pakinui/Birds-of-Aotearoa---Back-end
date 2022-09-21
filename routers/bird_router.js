@@ -1,6 +1,7 @@
 const express = require('express');
 var bird_controller = require('../controllers/bird_controller');
 var BirdModel = require('../models/birds.js');
+var fs = require('fs');
 
 //////
 const user = process.env.ATLAS_USER;
@@ -17,7 +18,7 @@ router.use(bodyParser.urlencoded({ extended: false }));
 
 router.use(express.json());
 
-const multer  = require('multer');
+const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 
@@ -45,16 +46,30 @@ router.post('/create', image, async (req, res) => {
     // console.log(await response.text());
     // currently does nothing except redirect to home page
     //create new bird element on page
-    
+
 
     // const name = req.query.pName;
     // console.log(name);
     // console.log(`primary naem = ${req.body.primary_name}`);
     //console.log(req);
-    var tempPath = req.files.myFile.path;
-    var targetPath = 'uploads/' + req.files.myFile.name;
+    var tempPath = req.body.source;
+    console.log(tempPath);
+    var targetPath = 'uploads/' + req.body.files.myFile.name;
+    console.log(targetPath);
+    fs.readFile(tempPath, function (err, data) {
+        fs.writeFile(targetPath, data, function (err) {
+            if(err){
+                console.log(err);
+                console.log('image upload error');
+            }else{
+                console.log('image upload worked');
+                res.render('/');
+            }
+            
+        })
+    });
 
-    
+
     const newBird = {
         primary_name: req.body.pName,
         english_name: req.body.eName,
@@ -69,48 +84,48 @@ router.post('/create', image, async (req, res) => {
         size: {
             height: {
                 value: req.body.height,
-                units : "g"
+                units: "g"
             },
             weight: {
                 value: req.body.weight,
                 units: "cm"
             }
         }
-        
+
     };
-   
+
     console.log(newBird);
     const bird_info = await BirdModel.create(newBird);
     console.log(bird_info, '/birds/create response');
     //res.send('success!');
-    
- //   const birdInfo = JSON.stringify(newBird);
+
+    //   const birdInfo = JSON.stringify(newBird);
     //const new_b = await BirdModel.create(newBird);
     //console.log(new_b, 'birds/create response');
 
     //tell cliuent it worked
-   // res.send('success! message create');
+    // res.send('success! message create');
 
 
-    
+
     res.redirect('/');
 });
 
 // TODO: get individual bird route(s)
-router.get('/bird',  async (req, res) => {
+router.get('/bird', async (req, res) => {
     console.log('get bird');
     //console.log(req);
     const id = req.query.name;
-    
+
     //const search = req.query.search;
     const status = req.query.status;
     const sort = req.query.sort;
-  
-   
+
+
     // render the Pug template 'home.pug' with the filtered data
     //this means the data from bird_con.. = birds?
     res.render('bird_page', {
-       
+
         birds: await bird_controller.filter_bird_data(id, status, sort)
     });
 });
