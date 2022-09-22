@@ -2,6 +2,7 @@ const express = require('express');
 var bird_controller = require('../controllers/bird_controller');
 var BirdModel = require('../models/birds.js');
 var fs = require('fs');
+const path = require('path');
 
 //////
 const user = process.env.ATLAS_USER;
@@ -18,56 +19,88 @@ router.use(bodyParser.urlencoded({ extended: false }));
 
 router.use(express.json());
 
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+//for image
+// const multer = require('multer');
+// const upload = multer({ dest: 'uploads/' }, {preservePath: true});
+// upload.preservePath = true;
+// const path = require('path');
+// const util = require('util');
+
+//image express ver
+const exp = require('express-fileupload');
 
 
 // TODO: finishe the "Create" route(s)
 router.get('/create', async (req, res) => {
     console.log('create');
+    
     // console.log(req);
     // currently does nothing except redirect to home page
     res.render('createPage');
 });
 
-var image = upload.single('myFile');
-router.post('/create', image, async (req, res) => {
+router.use(
+    exp()
+);
+
+//var image = upload.single('myFile');
+//router.post('/create', image, async (req, res) => {
+router.post('/create', async (req, res) => {
     console.log('post create');
     console.log(req.body);
     console.log(req.body.pName);
+    console.log(req.files.myFile);
+    // req.file.filename = originalname;
+    
+    // console.log(req.file);
+    // var tempPath = req.file.path;
+    // console.log(tempPath);
+    // var targetPath = req.file.originalname;
+    // console.log(targetPath);
 
-    // const response = await fetch('./birds/create', {
-    //     method: 'POST',
-    //     body: JSON.stringify(birdData),
-    //     header: {
-    //         'Content-Type' : 'application/json'
-    //     }
-    // }) ;
-    // console.log(await response.text());
-    // currently does nothing except redirect to home page
-    //create new bird element on page
-
-
-    // const name = req.query.pName;
-    // console.log(name);
-    // console.log(`primary naem = ${req.body.primary_name}`);
-    //console.log(req);
-    var tempPath = req.body.source;
-    console.log(tempPath);
-    var targetPath = 'uploads/' + req.body.files.myFile.name;
-    console.log(targetPath);
-    fs.readFile(tempPath, function (err, data) {
-        fs.writeFile(targetPath, data, function (err) {
-            if(err){
-                console.log(err);
-                console.log('image upload error');
-            }else{
-                console.log('image upload worked');
-                res.render('/');
-            }
+   // var current = fs.createReadStream();
+    // fs.readFile(tempPath,  function (err, data) {
+    //     if(err){
+    //         console.log('ERORRRR');
+    //         throw err; //fail if it cant be read
+    //     } 
+    //     // fs.writeFile(targetPath, data, function (err) {
+    //     //     if(err){
+    //     //         console.log(err);
+    //     //         console.log('image upload error');
+    //     //     }else{
+    //     //         console.log('image upload worked');
+    //     //         res.render('/');
+    //     //     }
             
-        })
-    });
+    //     // })
+    //     console.log('read file complete');
+    // });
+    if (!req.files) {
+        return res.status(400).send("No files were uploaded.");
+    }
+
+    const fileImg = req.files.myFile
+    const fromPath = path.join(__dirname, "../public/images/", fileImg.name);
+    console.log(`path: ${fromPath}`);
+    
+    fileImg.mv(fromPath, function(err) {
+        if(err){
+            console.log('file error');
+            return res.status(500).send(err);
+        }else{
+            console.log('file uploaded');
+        }
+    } );
+    
+    // const copyFile = util.promisify(fs.copyFile);
+    // const img = req.file;
+    // const results = Object.keys(img).map((key) => {
+    //     const f = img[key];
+    //     const dest = path.join('uploads/', f.name);
+    //     return copyFile(f.path, dest);
+    // });
+    // await Promise.all(results);
 
 
     const newBird = {
@@ -79,7 +112,7 @@ router.post('/create', image, async (req, res) => {
         status: req.body.cStatus,
         photo: {
             credit: req.body.credit,
-            source: tempPath
+            source: fileImg.name
         },
         size: {
             height: {
@@ -90,25 +123,21 @@ router.post('/create', image, async (req, res) => {
                 value: req.body.weight,
                 units: "cm"
             }
-        }
+        },
+        other_names: req.body.other_names
 
     };
 
     console.log(newBird);
     const bird_info = await BirdModel.create(newBird);
-    console.log(bird_info, '/birds/create response');
+    //console.log(bird_info, '/birds/create response');
     //res.send('success!');
 
-    //   const birdInfo = JSON.stringify(newBird);
-    //const new_b = await BirdModel.create(newBird);
-    //console.log(new_b, 'birds/create response');
-
-    //tell cliuent it worked
-    // res.send('success! message create');
+   
 
 
 
-    res.redirect('/');
+    res.render('home');
 });
 
 // TODO: get individual bird route(s)

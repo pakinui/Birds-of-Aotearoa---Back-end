@@ -1,10 +1,7 @@
 h1 Create A Bird 
 div(class='mainCard')
      form(action="/birds/create", method='POST' enctype="multipart/form-data" id='createForm')
-        
-        
-           
-        
+
         br
         label(for='pName') Primary Name
         br
@@ -61,6 +58,6 @@ div(class='mainCard')
             
         
         img(id='uploaded_preview', src='/images/default.jpg', alt='Photo of')
-        input(type='file', name='myFile', id='fileButton')
+        input(type='file' name='myFile' id='fileButton')
             
         button(type='submit' id='createButton') Create Bird

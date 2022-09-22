@@ -46,7 +46,7 @@ app.get('*', (req, res) => {
 
 // Database
 const mongoose = require("mongoose");
-const { MongoClient } = require("mongodb");
+
 const user = process.env.ATLAS_USER;
 const password = process.env.ATLAS_PASSWORD;
 const db_name = 'NZ_birds';

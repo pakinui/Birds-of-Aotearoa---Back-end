@@ -52,9 +52,9 @@ function bird_sort(birds, sort) {
         case "Reverse alphabetical":
             sort_func = (a, b) => b.primary_name.localeCompare(a.primary_name); break;
         case "Shortest to longest":
-            sort_func = (a, b) => a.size.length.value - b.size.length.value; break;
+            sort_func = (a, b) => a.size.height.value - b.size.height.value; break;
         case "Longest to shortest":
-            sort_func = (a, b) => b.size.length.value - a.size.length.value; break;
+            sort_func = (a, b) => b.size.height.value - a.size.height.value; break;
         case "Lightest to heaviest":
             sort_func = (a, b) => a.size.weight.value - b.size.weight.value; break;
         case "Heaviest to lightest":
