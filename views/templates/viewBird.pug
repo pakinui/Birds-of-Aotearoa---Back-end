@@ -28,5 +28,5 @@ section(class='card')
                 span=`${bird.size.weight.value} ${bird.size.weight.units}`
         a(href=`/birds/bird?name=${bird.scientific_name}/edit`)
             button(id='viewBird') Edit Bird
-        a(href=`/birds/bird?name=${bird.scientific_name}/delete`)
+        a(href=`/birds/delete?name=${bird.scientific_name}`)
             button(id='viewBird') Delete Bird

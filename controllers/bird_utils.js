@@ -1,6 +1,11 @@
 // string_normalize: strips diacritics and converts to lower case
 function string_normalize(s) {
-    return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    //console.log(s);
+    try{
+        return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }catch{
+        console.log(s);
+    }
 }
 
 // string_match: returns true if search_string is a substring of data_string

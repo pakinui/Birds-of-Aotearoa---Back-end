@@ -137,7 +137,7 @@ router.post('/create', async (req, res) => {
 
 
 
-    res.render('home');
+    res.redirect('/');
 });
 
 // TODO: get individual bird route(s)
@@ -181,9 +181,18 @@ router.get('/', async (req, res) => {
 // });
 
 // TODO: Delete bird route(s)
-// router.get('/delete', async (req, res) => {
+router.get('/delete', async (req, res) => {
+     console.log(req.query.name);
+    var bird = await BirdModel.findOne({scienfitic_name: req.query.name});
+    console.log(bird._id.toString());
+    // const idd = req.id;
+    // console.log(bird);
+    
+    const bd_info = await BirdModel.findOneAndDelete({scientific_name: req.query.name});
+    console.log(bd_info, 'birds/delete response');
 
-// });
+    res.redirect('/');
+});
 
 router.get('*', (req, res) => {
     res.status(404);
