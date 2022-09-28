@@ -1,3 +1,5 @@
+
+
 h1(id = "editHeading")=`${birds.primary_name}`
 div(class='mainCard')
      form(action="/birds/edit", method='POST' enctype="multipart/form-data" id='editForm')
@@ -16,26 +18,19 @@ div(class='mainCard')
         input(type='text', name='eName' class='searchbar' id='eName' value=`${birds.english_name}`)
         br
         label(for='oName') Other names
+            - var other = bird.other_names.join(" .\r\n");
         br
-        input(type='text', name='oName' class='searchbar' id='oName' value='')
+        input(type='text', name='oName' class='searchbar' id='oName' value=other rows=`${bird.other_names.length}` wrap ='hard')
         br
         label(for='cStatus') Conservation Status
         br
+        - var status = ['Not Threatened', 'Naturally Uncommon', 'Relict', 'Recovering', 'Declining', 'Nationally Increasing', 'Nationally Vulnerable', 'Nationally Endangered', 'Nationally Critical', 'Extinct', 'Data Deficient'];
         select(name='cStatus' class='searchbar' id='cStatus' value=`${birds.status}`)
-            option(value='Not Threatened') Not Threatened 
-            option Naturally Uncommon
-            option(value='Relict') Relict 
-            option Recovering 
-            option Declining 
-            option Nationally Increasing 
-            option Nationally Vulnerable 
-            option Nationally Endangered 
-            option Nationally Critical 
-            option Extinct 
-            option Data Deficient
-
-                
-            
+            for s in status 
+                if s == bird.status
+                    option(selected)=s 
+                else 
+                    option=s  
         br
         label(for='fam') Family
         br
@@ -59,6 +54,6 @@ div(class='mainCard')
             
         
         img(id='uploaded_preview', src=`/images/${birds.photo.source}`, alt='Photo of')
-        input(type='file' name='myFile' id='fileButton' value=`/images/${birds.photo.source}`)
+        input(type='file' name='myFile' id='fileButton' value=`/images/${birds.photo.source}` onchange="onChange()")
             
         button(type='submit' id='editButton') Save Bird

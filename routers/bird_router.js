@@ -47,27 +47,31 @@ router.use(
 //router.post('/create', image, async (req, res) => {
 router.post('/create', async (req, res) => {
     console.log('post create');
-    console.log(req.body);
+    //console.log(req.body);
     //console.log(req.body.pName);
     //console.log(req.files.myFile);
+    var filePath;
 
     if (!req.files) {
-        return res.status(400).send("No files were uploaded.");
+        filePath = 'default.jpg'
+        //return res.status(400).send("No files were uploaded.");
+    } else {
+        const fileImg = req.files.myFile
+        const fromPath = path.join(__dirname, "../public/images/", fileImg.name);
+        console.log(`path: ${fromPath}`);
+        filePath = fromPath;
+        fileImg.mv(fromPath, function (err) {
+            if (err) {
+                console.log('file error');
+                return res.status(500).send(err);
+            } else {
+                console.log('file uploaded');
+            }
+        });
     }
 
-    const fileImg = req.files.myFile
-    const fromPath = path.join(__dirname, "../public/images/", fileImg.name);
-    console.log(`path: ${fromPath}`);
 
-    fileImg.mv(fromPath, function (err) {
-        if (err) {
-            console.log('file error');
-            return res.status(500).send(err);
-        } else {
-            console.log('file uploaded');
-        }
-    });
-
+    console.log(filePath);
     // const copyFile = util.promisify(fs.copyFile);
     // const img = req.file;
     // const results = Object.keys(img).map((key) => {
@@ -76,7 +80,9 @@ router.post('/create', async (req, res) => {
     //     return copyFile(f.path, dest);
     // });
     // await Promise.all(results);
-
+    //console.log(`other names: ${req.body.oName}\n`);
+    const namesArr = req.body.oName.split(" ");
+    //console.log(`arr ver: ${namesArr}\n`);
 
     const newBird = {
         primary_name: req.body.pName,
@@ -87,7 +93,7 @@ router.post('/create', async (req, res) => {
         status: req.body.cStatus,
         photo: {
             credit: req.body.credit,
-            source: fileImg.name
+            source: filePath
         },
         size: {
             height: {
@@ -99,7 +105,7 @@ router.post('/create', async (req, res) => {
                 units: "cm"
             }
         },
-        other_names: req.body.other_names
+        other_names: namesArr
 
     };
 
@@ -121,16 +127,12 @@ router.get('/bird', async (req, res) => {
     //console.log(req);
     const id = req.query.name;
 
-    //const search = req.query.search;
-    const status = req.query.status;
-    const sort = req.query.sort;
 
+    bird = await BirdModel.findById({ _id: id });
 
-    // render the Pug template 'home.pug' with the filtered data
-    //this means the data from bird_con.. = birds?
     res.render('bird_page', {
 
-        birds: await bird_controller.filter_bird_data(id, status, sort)
+        birds: bird
     });
 });
 
@@ -144,10 +146,10 @@ router.get('/', async (req, res) => {
 
     console.log('home');
     //var birds =await  bird_controller.filter_bird_data(search, status, sort);
-    
+
     res.render('home', {
         birds: await bird_controller.filter_bird_data(search, status, sort)
-        
+
     });
 
 })
@@ -158,6 +160,7 @@ router.get('/edit', async (req, res) => {
     bird = await BirdModel.findOne({ _id: req.query.name });
     console.log(`request id: ${bird._id}\n`);
     console.log(`request id2: ${req.query.name}\n`);
+    console.log(bird);
     res.render('editPage', {
         birds: bird
     });
@@ -166,10 +169,12 @@ router.get('/edit', async (req, res) => {
 
 router.post('/edit', async (req, res) => {
 
-    bird = await BirdModel.findOne({scientific_name: req.body.sName});
-    
+    bird = await BirdModel.findOne({ scientific_name: req.body.sName });
+    //var d = document.querySelector('select');
+
     console.log(`id?1?: ${bird}`);
     console.log(`id?asd1?: ${bird._id}`);
+    const namesArr = req.body.oName.split(" ");
 
     const newBird = {
         primary_name: req.body.pName,
@@ -188,8 +193,11 @@ router.post('/edit', async (req, res) => {
                 units: "cm"
             }
         },
-        other_names: req.body.other_names
-        
+        photo: {
+            credit: req.body.credit
+        },
+        other_names: namesArr
+
 
     };
     if (!req.files) {
@@ -209,16 +217,16 @@ router.post('/edit', async (req, res) => {
                 console.log('file uploaded');
             }
         });
-        newBird.photo.source=fileImg.name;
+        newBird.photo.source = fileImg.name;
     }
-    
+
 
     console.log(newBird);
     const bird_info = await BirdModel.findByIdAndUpdate(bird._id, newBird);
     console.log(`info: ${bird._id}`);
-    
 
-    res.redirect(`/birds/bird/?name=${newBird.scientific_name}`);
+
+    res.redirect(`/birds/bird/?name=${bird._id}`);
 });
 // TODO: Delete bird route(s)
 router.get('/delete', async (req, res) => {
@@ -230,6 +238,9 @@ router.get('/delete', async (req, res) => {
 
     const bd_info = await BirdModel.findOneAndDelete({ scientific_name: req.query.name });
     console.log(bd_info, 'birds/delete response');
+
+    //do i need to delete the image from /images?
+
 
     res.redirect('/');
 });

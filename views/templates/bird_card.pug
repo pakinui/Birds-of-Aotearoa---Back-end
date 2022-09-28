@@ -26,5 +26,5 @@ section(class='card')
             li
                 b Weight 
                 span=`${bird.size.weight.value} ${bird.size.weight.units}`
-        a(href=`/birds/bird/?name=${bird.scientific_name}`)
+        a(href=`/birds/bird/?name=${bird._id}`)
             button(id='viewBird') View Bird
