@@ -58,6 +58,6 @@ div(class='mainCard')
             
         
         img(id='uploaded_preview', src='/images/default.jpg', alt='Photo of')
-        input(type='file' name='myFile' id='fileButton' onchange='onChange()')
+        input(type='file' name='myFile' id='fileButton' onchange="document.getElementById('uploaded_preview').src = window.URL.createObjectURL(this.files[0])")
             
         button(type='submit' id='createButton') Create Bird

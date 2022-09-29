@@ -3,7 +3,7 @@
 h1(id = "editHeading")=`${birds.primary_name}`
 div(class='mainCard')
      form(action="/birds/edit", method='POST' enctype="multipart/form-data" id='editForm')
-
+        input(type='hidden' name='birdID' id='birdID' value = `${birds._id}`)
         br
         label(for='pName') Primary Name
         br
@@ -54,6 +54,6 @@ div(class='mainCard')
             
         
         img(id='uploaded_preview', src=`/images/${birds.photo.source}`, alt='Photo of')
-        input(type='file' name='myFile' id='fileButton' value=`/images/${birds.photo.source}` onchange="onChange()")
+        input(type='file' name='myFile' id='fileButton' value=`/images/${birds.photo.source}` onchange="document.getElementById('uploaded_preview').src = window.URL.createObjectURL(this.files[0])")
             
         button(type='submit' id='editButton') Save Bird
