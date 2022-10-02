@@ -28,6 +28,9 @@
 .Nationally-Critical {
     background: #320033;
 }
+.Extinct {
+    background: black;
+}
 .Data-Deficient {
     background: black;
 }

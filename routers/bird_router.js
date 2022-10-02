@@ -27,7 +27,7 @@ const exp = require('express-fileupload');
 // TODO: finishe the "Create" route(s)
 router.get('/create', async (req, res) => {
     try {
-        console.log('create');
+        //console.log('create');
 
         // console.log(req);
         // currently does nothing except redirect to home page
@@ -48,7 +48,7 @@ router.use(
 //router.post('/create', image, async (req, res) => {
 router.post('/create', async (req, res) => {
     try {
-        console.log('post create');
+        //console.log('post create');
         //console.log(req.body);
         //console.log(req.body.pName);
         //console.log(req.files.myFile);
@@ -60,7 +60,7 @@ router.post('/create', async (req, res) => {
         } else {
             const fileImg = req.files.myFile
             const fromPath = path.join(__dirname, "../public/images/", fileImg.name);
-            console.log(`path: ${fromPath}`);
+            //console.log(`path: ${fromPath}`);
             filePath = fileImg.name;
             fileImg.mv(fromPath, function (err) {
                 if (err) {
@@ -134,7 +134,7 @@ router.get('/bird', async (req, res) => {
     //console.log(req);
     try {
         const id = req.query.name;
-        console.log('get bird');
+        //console.log('get bird');
 
         bird = await BirdModel.findById({ _id: id });
 
@@ -157,7 +157,7 @@ router.get('/', async (req, res) => {
         const sort = req.query.sort;
         //console.log(req);
 
-        console.log('home');
+        //console.log('home');
         //var birds =await  bird_controller.filter_bird_data(search, status, sort);
 
         res.render('home', {
@@ -174,11 +174,11 @@ router.get('/', async (req, res) => {
 // TODO: Update bird route(s)
 router.get('/edit', async (req, res) => {
     try {
-        console.log('edit');
+        //console.log('edit');
         bird = await BirdModel.findOne({ _id: req.query.name });
-        console.log(`request id: ${bird._id}\n`);
+        //console.log(`request id: ${bird._id}\n`);
         // console.log(`request id2: ${req.query.name}\n`);
-        console.log(bird);
+        //console.log(bird);
         res.render('editPage', {
             birds: bird
         });
@@ -191,26 +191,26 @@ router.get('/edit', async (req, res) => {
 
 router.post('/edit', async (req, res) => {
     try {
-        console.log("Edit time");
-        console.log(req.body.birdID);
+        //console.log("Edit time");
+        //console.log(req.body.birdID);
 
-        console.log(req.query);
+        //console.log(req.query);
         bird = await BirdModel.findById({ _id: req.body.birdID });
         //var d = document.querySelector('select');
 
-        console.log(`id?1?: ${bird}`);
-        console.log(`id?asd1?: ${bird._id}`);
+        //console.log(`id?1?: ${bird}`);
+        //console.log(`id?asd1?: ${bird._id}`);
         const namesArr = req.body.oName.split(" ");
 
         var filePath;
 
         if (!req.files) {
-            filePath = 'default.jpg'
+            filePath = bird.photo.source;
             //return res.status(400).send("No files were uploaded.");
         } else {
             const fileImg = req.files.myFile
             const fromPath = path.join(__dirname, "../public/images/", fileImg.name);
-            console.log(`path: ${fromPath}`);
+            //console.log(`path: ${fromPath}`);
             filePath = fileImg.name;
             fileImg.mv(fromPath, function (err) {
                 if (err) {
@@ -223,7 +223,7 @@ router.post('/edit', async (req, res) => {
         }
 
 
-        console.log(filePath);
+        //console.log(filePath);
 
         const newBird = {
             primary_name: req.body.pName,
@@ -273,7 +273,7 @@ router.post('/edit', async (req, res) => {
 
         console.log(newBird);
         const bird_info = await BirdModel.findByIdAndUpdate(bird._id, newBird);
-        console.log(`info: ${bird._id}`);
+        //console.log(`info: ${bird._id}`);
 
 
         res.redirect(`/birds/bird/?name=${bird._id}`);
@@ -288,14 +288,14 @@ router.post('/edit', async (req, res) => {
 // TODO: Delete bird route(s)
 router.get('/delete', async (req, res) => {
     try {
-        console.log(req.query.name);
+        //console.log(req.query.name);
         var bird = await BirdModel.findOne({ scienfitic_name: req.query.name });
-        console.log(bird._id.toString());
+        //console.log(bird._id.toString());
         // const idd = req.id;
         // console.log(bird);
 
         const bd_info = await BirdModel.findOneAndDelete({ scientific_name: req.query.name });
-        console.log(bd_info, 'birds/delete response');
+        //console.log(bd_info, 'birds/delete response');
 
         //do i need to delete the image from /images?
 
