@@ -9,11 +9,11 @@ div(class='mainCard')
         br
         label(for='sName') Scientific Name
         br
-        input(type='text', name='sName' class='searchbar' id='sName' placeholder='')
+        input(type='text', name='sName' class='searchbar' id='sName' placeholder='' required)
         br
         label(for='eName') English Name
         br
-        input(type='text', name='eName' class='searchbar' id='eName' placeholder='')
+        input(type='text', name='eName' class='searchbar' id='eName' placeholder='' required)
         br
         label(for='oName') Other names
         br
@@ -38,26 +38,26 @@ div(class='mainCard')
         br
         label(for='fam') Family
         br
-        input(type='text', name='fam' class='searchbar' id='fam' placeholder='')
+        input(type='text', name='fam' class='searchbar' id='fam' placeholder='' required)
         br
         label(for='ord') Order
         br
-        input(type='text', name='ord' class='searchbar' id='ord' placeholder='')
+        input(type='text', name='ord' class='searchbar' id='ord' placeholder='' required)
         br
         label(for='height') Length(cm)
         br
-        input(type='number', name='height' class='searchbar' id='height' value='0')
+        input(type='number', name='height' class='searchbar' id='height' value='0' required min ='1')
         br
         label(for='weight') Weight(g)
         br
-        input(type='number', name='weight' class='searchbar' id='weight' value='0')
+        input(type='number', name='weight' class='searchbar' id='weight' value='0' required min ='1')
         br
         label(for='credit') Photo credit
         br
-        input(type='text', name='credit' class='searchbar' id='credit' placeholder='')
+        input(type='text', name='credit' class='searchbar' id='credit' placeholder='' required)
             
         
         img(id='uploaded_preview', src='/images/default.jpg', alt='Photo of')
-        input(type='file' name='myFile' id='fileButton' onchange="document.getElementById('uploaded_preview').src = window.URL.createObjectURL(this.files[0])")
+        input(type='file' name='myFile' id='fileButton' onchange="document.getElementById('uploaded_preview').src = window.URL.createObjectURL(this.files[0])" required accept="image/png, image/jpg, image/jpeg")
             
         button(type='submit' id='createButton') Create Bird

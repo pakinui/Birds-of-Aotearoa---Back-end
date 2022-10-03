@@ -2,28 +2,25 @@
     --aside-width: 100%;
 }
 
-
-
-
 main {
     display: flex;
     width: 100vw !important;
     gap: 0;
     right: 0 !important;
-    /* align-content: center; */
     text-align: center;
-    
     min-height: 100%;
     margin: 0!important;
     padding: 0 !important;
+}
+
+body{
+    max-height: 100vh;
 }
 
 #whoops{
     line-height: 12vmin;
     font-size: 6vmin;
     width: 100vw;
-    /* background-color: rebeccapurple; */
-    
     height: 15%;
     margin: 0!important;
     padding: 0 !important;
@@ -31,10 +28,8 @@ main {
 
 #four {
     width: 100vw;
-    /* background-color: rgb(184, 148, 221); */
     height: 75%;
     font-size: 58vmin;
-    
     line-height: 65vh;
     opacity: 30%;
     margin: 0!important;
@@ -48,7 +43,6 @@ main {
     width: 100vw;
     margin: 0!important;
     padding: 0 !important;
-    /* background-color: pink; */
     text-align: center;
     justify-content: center;
     justify-items: center;
@@ -56,9 +50,6 @@ main {
 
 #linkHome *{
     font-size: 3vmin;
-    
     line-height: 3vmin;
     color: #333333;
 }
-
-

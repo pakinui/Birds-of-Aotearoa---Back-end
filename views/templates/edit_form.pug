@@ -18,9 +18,11 @@ div(class='mainCard')
         input(type='text', name='eName' class='searchbar' id='eName' value=`${birds.english_name}`)
         br
         label(for='oName') Other names
-            - var other = bird.other_names.join(" .\r\n");
         br
-        input(type='text', name='oName' class='searchbar' id='oName' value=other rows=`${bird.other_names.length}` wrap ='hard')
+        textarea( name='oName' class='searchbar' id='oName' rows=10 cols=100 )
+            - var newL = '\n'
+            for n in birds.other_names
+                | #{n}#{newL}
         br
         label(for='cStatus') Conservation Status
         br
@@ -54,6 +56,6 @@ div(class='mainCard')
             
         
         img(id='uploaded_preview', src=`/images/${birds.photo.source}`, alt='Photo of')
-        input(type='file' name='myFile' id='fileButton' value=`/images/${birds.photo.source}` onchange="document.getElementById('uploaded_preview').src = window.URL.createObjectURL(this.files[0])")
+        input(type='file' name='myFile' id='fileButton' value=`/images/${birds.photo.source}` onchange="document.getElementById('uploaded_preview').src = window.URL.createObjectURL(this.files[0])" accept="image/png, image/jpg, image/jpeg")
             
         button(type='submit' id='editButton') Save Bird

@@ -6,17 +6,12 @@ html(lang='en')
         meta(name='viewport', content='width=device-width, initial-scale=1')
         link(rel='stylesheet', href='/styles/layout.css')
         link(rel='stylesheet', href='/styles/theme.css')
-        link(rel='stylesheet', href='/styles/birdPage.css')
-        link(rel='stylesheet', href='/styles/create.css')
         script(defer, src='/scripts/populate_form.js')
-        script(defer, src='/scripts/fileImg.js')
-        
         
     body
         include templates/header.pug
         aside   
             include templates/homeButton.pug
         main
-            
             include templates/edit_form.pug
         include templates/footer.pug

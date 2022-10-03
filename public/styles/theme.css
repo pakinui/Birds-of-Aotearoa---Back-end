@@ -79,3 +79,11 @@ button:hover {
 button:active {
     background: var(--theme-primary-dark);
 }
+
+input{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+label {
+    font-size: medium;
+}

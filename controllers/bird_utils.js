@@ -1,6 +1,5 @@
 // string_normalize: strips diacritics and converts to lower case
 function string_normalize(s) {
-    //console.log(s);
     try{
         return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }catch{

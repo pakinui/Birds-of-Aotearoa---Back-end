@@ -1,32 +1,33 @@
 section(class='card')
+    h1(lang="mi" id='title') #{bird.primary_name}
     div(class="card-image")
         img(src=`/images/${bird.photo.source}` alt=`Photo of ${bird.primary_name}`)
         div(class="card-title")
-            p(lang="mi") #{bird.primary_name}
-            span Photo by #{bird.photo.credit}
-        div(class=`circle ${bird.status.replace(' ', '-')}`)
+            
+            p(id='creds') Photo by #{bird.photo.credit}
+            div(class=`circle ${bird.status.replace(' ', '-')}`)
     div(class="card-content")
         h2(class="card-title") 
-        ul
-            li
-                b Scientific
-                span=bird.scientific_name
-            li
-                b Family
-                span=bird.family
-            li
-                b Order 
-                span=bird.order
-            li
-                b Status 
-                span=bird.status
-            li
-                b Length 
-                span=`${bird.size.height.value} ${bird.size.height.units}`
-            li
-                b Weight 
-                span=`${bird.size.weight.value} ${bird.size.weight.units}`
-        a(href=`/birds/edit?name=${bird._id}`)
+        div(id='infoGrid')
+            div(id='sci' class='left')
+                p(class='bold') Scientific name 
+                p=bird.scientific_name
+            div(id='fam' class='middle')
+                p(class='bold') Family 
+                p=bird.family
+            div(id='ord' class='right')
+                p(class='bold') Order
+                p=bird.order
+            div(id='stat' class='left')
+                p(class='bold') Status 
+                p=bird.status
+            div(id='leng' class='middle')
+                p(class='bold') Height
+                p=`${bird.size.height.value} cm`
+            div(id='weig' class='right')
+                p(class='bold') Weight 
+                p=`${bird.size.weight.value} g`
+        a(href=`/birds/edit?id=${bird._id}`)
             button(id='viewBird') Edit Bird
-        a(href=`/birds/delete?name=${bird.scientific_name}`)
+        a(href=`/birds/delete?id=${bird._id}`)
             button(id='viewBird') Delete Bird
